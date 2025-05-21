@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI в менеджменте | О проекте</title>
+    <link rel="stylesheet" href="/site/styles/styles.css">
+</head>
+<body>
+    <header>
+        <div class="width-container flex header_main">
+            <div class="logo-container">
+                <a class="flex" href="https://www.bmw.com" target="_blank">
+                    <img src="assets/bmw-logo.svg" alt="">
+                </a>
+                <a class="flex" href="https://mospolytech.ru" target="_blank">
+                    <img src="assets/mospolytech-logo.svg" alt="">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html" class="active">О проекте</a></li>
+                    <li><a href="implementation.html">Реализация технологии</a></li>
+                    <li><a href="resources.html">Ресурсы</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="about-section">
+            <div class="width-container">
+                <h2 class="align">Актуальность и проблематика проекта</h2>
+                <p>Актуальность проекта обусловлена важностью корпоративных веб-приложений, основанных на базе данных, которые играют ключевую роль в управлении сотрудниками. Такие системы позволяют централизованно хранить, обновлять и анализировать данные о персонале, что существенно повышает эффективность HR-процессов.</p>
+                <p>Проблематика проекта заключается в том, что в настоящее время дилерские автосалоны BMW используют для учета данных о сотрудниках устаревший и неунифицированный формат — Excel-таблицы. Это затрудняет своевременное обновление информации, усложняет контроль и анализ, а также снижает прозрачность и оперативность управления персоналом.</p>
+                
+
+                <h2 class="align">Задачи</h2>
+                <ul>
+                    <li>Создать централизованное веб-приложение для учета данных сотрудников дилерских центров BMW</li>
+                    <li>Обеспечить удобный интерфейс для внесения и обновления информации дилерами</li>
+                    <li>Разработать функционал для тренинг-центра по отслеживанию статуса прохождения обучающих программ</li>
+                    <li>Повысить качество учета и контроля за процессом обучения сотрудников</li>
+                </ul>
+
+                <h2 class="align">Техническая реализация</h2>
+                <p>Проект реализован в виде корпоративного веб-приложения с интерфейсом для дилерских центров и тренинг-центра BMW. Разработка frontend-части велась с использованием библиотеки React, что обеспечило высокую скорость отклика, модульность и удобство масштабирования.</p>
+                <p>Работа над проектом организована по методологии Agile с использованием Jira для управления задачами и отслеживания прогресса. Вся проектная документация и совместная работа велись в Coda. Для контроля версий и командной разработки использовался GitLab.</p>
+                <p>Реализованы страницы авторизации, личные кабинеты сотрудников и пользователей, а также интерфейсы для добавления и редактирования информации. В рамках проекта также были разработаны модальные окна и логика ролевого доступа.</p>
+
+                <div class="code-section">
+                    <h3>Исходный код бота</h3>
+                    <pre style="background:#23272e; color:#e6e6e6; padding:16px; border-radius:8px; overflow-x:auto; font-size:15px;">
+<span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">&#123; Agent &#125;</span> <span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">"node:https"</span>;
+<span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">&#123; Telegraf, session &#125;</span> <span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">"telegraf"</span>;
+<span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">&#123; Stage, WizardScene &#125;</span> <span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">"telegraf/scenes"</span>;
+<span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">&#123; message &#125;</span> <span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">"telegraf/filters"</span>;
+<span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">GigaChat</span> <span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">"gigachat"</span>;
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">bot</span> <span style="color:#e6e6e6;">=</span> <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">Telegraf</span>(<span style="color:#a5d6ff;">"7970149447:AAH5dyN_8FqYWC_qTPnzCDOLVEX5coZYoiQ"</span>);
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">giga</span> <span style="color:#e6e6e6;">=</span> <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">GigaChat</span>(&#123;
+    <span style="color:#79c0ff;">timeout</span>: <span style="color:#7ee787;">600</span>,
+    <span style="color:#79c0ff;">model</span>: <span style="color:#a5d6ff;">"GigaChat-Max"</span>,
+    <span style="color:#79c0ff;">credentials</span>: <span style="color:#a5d6ff;">"NzYyMjk1N2QtNTU5OS00MTk2LTgxMWQtOWI2ZWRkMzg3NGY4OmUzZjgzMDUxLTE4ZjEtNDUyMi04OGQ3LTZlZDU4ZDk1N2M3MA=="</span>,
+    <span style="color:#79c0ff;">httpsAgent</span>: <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">Agent</span>(&#123; <span style="color:#79c0ff;">rejectUnauthorized</span>: <span style="color:#7ee787;">false</span> &#125;)
+&#125;)
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">generatePrompt</span> <span style="color:#e6e6e6;">=</span> (<span style="color:#e6e6e6;">&#123;name, education, experience, schedule, place&#125;</span>) <span style="color:#e6e6e6;">=&gt;</span> <span style="color:#a5d6ff;">`Напиши вакансию для дилерского центра BMW. В общую часть включи: О компании (часть российской сети BMW; фокус на инновациях, премиум-качество, клиентский опыт). Мы предлагаем (конкурентная зарплата + бонусы, обучение по стандартам BMW, карьерный рост, льготы на авто/страхование, современное оборудование, дружный коллектив). Общие требования (клиентоориентированность, стремление к развитию, надежность, соблюдение стандартов BMW, презентабельный вид). Стиль: мотивирующий, профессиональный, без клише. Акцент на экспертизе, инновациях и премиум-сервисе. Убрать разъяснение терминов. Требования указаны ниже. Название вакансии:  &#36;{name} Образование:  &#36;{education} Опыт работа:  &#36;{experience} График работы: &#36;{schedule} Место работы: &#36;{place} `</span>;
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">vacancy</span> <span style="color:#e6e6e6;">=</span> <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">WizardScene</span>(<span style="color:#a5d6ff;">"VacancyScene"</span>,
+  (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+    <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#a5d6ff;">"Как будет называться вакансия?"</span>)
+    <span style="color:#79c0ff;">ctx</span>.wizard.next()
+  &#125;,
+  (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">response</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">ctx</span>.message.text
+    <span style="color:#79c0ff;">ctx</span>.wizard.state.name = <span style="color:#79c0ff;">response</span>
+
+    <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#a5d6ff;">"Какое образование необходимо для вакансии?"</span>)
+    <span style="color:#79c0ff;">ctx</span>.wizard.next()
+  &#125;,
+  (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">response</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">ctx</span>.message.text
+    <span style="color:#79c0ff;">ctx</span>.wizard.state.education = <span style="color:#79c0ff;">response</span>
+    
+    <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#a5d6ff;">"Какой опыт работы необходим для вакансии?"</span>)
+    <span style="color:#79c0ff;">ctx</span>.wizard.next()
+  &#125;,
+  (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">response</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">ctx</span>.message.text
+    <span style="color:#79c0ff;">ctx</span>.wizard.state.experience = <span style="color:#79c0ff;">response</span>
+    
+    <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#a5d6ff;">"Какой график работы будет у этой вакансии?"</span>)
+    <span style="color:#79c0ff;">ctx</span>.wizard.next()
+  &#125;,
+  (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">response</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">ctx</span>.message.text
+    <span style="color:#79c0ff;">ctx</span>.wizard.state.schedule = <span style="color:#79c0ff;">response</span>
+    
+    <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#a5d6ff;">"Где будет работать сотрудник этой вакансии?"</span>)
+    <span style="color:#79c0ff;">ctx</span>.wizard.next()
+  &#125;,
+  <span style="color:#ff7b72;">async</span> (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">response</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">ctx</span>.message.text
+    <span style="color:#79c0ff;">ctx</span>.wizard.state.place = <span style="color:#79c0ff;">response</span>
+    
+    <span style="color:#79c0ff;">ctx</span>.session.messages = [&#123;
+      <span style="color:#a5d6ff;">role</span>: <span style="color:#a5d6ff;">"user"</span>,
+      <span style="color:#a5d6ff;">content</span>: <span style="color:#79c0ff;">generatePrompt</span>(&#123; ...<span style="color:#79c0ff;">ctx</span>.wizard.state &#125;)
+    &#125;]
+    
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">responce</span> <span style="color:#e6e6e6;">=</span> <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">giga</span>.chat(&#123; messages: <span style="color:#79c0ff;">ctx</span>.session.messages &#125;)
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">text</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">responce</span>.choices[0].message.content
+
+    <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#79c0ff;">text</span>)
+    <span style="color:#79c0ff;">ctx</span>.session.messages.push(&#123;role: <span style="color:#a5d6ff;">"assistant"</span>, content: <span style="color:#79c0ff;">text</span>&#125;)
+
+    <span style="color:#79c0ff;">ctx</span>.scene.leave()
+  &#125;,
+)
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">scenes</span> <span style="color:#e6e6e6;">=</span> <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">Stage</span>([<span style="color:#79c0ff;">vacancy</span>])
+<span style="color:#79c0ff;">bot</span>.use(<span style="color:#79c0ff;">session</span>())
+<span style="color:#79c0ff;">bot</span>.use(<span style="color:#79c0ff;">scenes</span>.middleware())
+
+<span style="color:#79c0ff;">bot</span>.command(<span style="color:#a5d6ff;">"vacancy"</span>, <span style="color:#ffa657;">Stage</span>.enter(<span style="color:#a5d6ff;">"VacancyScene"</span>))
+
+<span style="color:#79c0ff;">bot</span>.on(<span style="color:#ffa657;">message</span>(<span style="color:#a5d6ff;">"text"</span>), <span style="color:#ff7b72;">async</span> (<span style="color:#79c0ff;">ctx</span>) <span style="color:#e6e6e6;">=&gt;</span> &#123;
+  <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">message</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">ctx</span>.message.text
+
+  <span style="color:#79c0ff;">ctx</span>.session.messages.push(&#123; role: <span style="color:#a5d6ff;">"user"</span>, content: <span style="color:#79c0ff;">message</span> &#125;)
+
+  <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">responce</span> <span style="color:#e6e6e6;">=</span> <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">giga</span>.chat(&#123; messages: <span style="color:#79c0ff;">ctx</span>.session.messages &#125;)
+
+  <span style="color:#79c0ff;">ctx</span>.session.messages.push(&#123; role: <span style="color:#a5d6ff;">"assistant"</span>, content: <span style="color:#79c0ff;">responce</span>.choices[0].message.content&#125;)
+
+  <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">ctx</span>.reply(<span style="color:#79c0ff;">responce</span>.choices[0].message.content)
+  <span style="color:#79c0ff;">console</span>.log(<span style="color:#79c0ff;">responce</span>.usage.total_tokens)
+&#125;)
+
+<span style="color:#79c0ff;">bot</span>.launch()
+                    </pre>
+                </div>
+
+                <h2 class="align">Как это работает?</h2>
+                <p>Бот использует пошаговый диалог для сбора информации о вакансии:</p>
+                <ol>
+                    <li>Название вакансии</li>
+                    <li>Требуемое образование</li>
+                    <li>Необходимый опыт работы</li>
+                    <li>График работы</li>
+                    <li>Место работы</li>
+                </ol>
+                <p>После сбора всей информации, бот генерирует профессиональный текст вакансии с использованием языковой модели GigaChat, учитывая все стандарты и требования BMW.</p>
+            </div>
+        </section>
+
+        <div class="timeline-container">
+            <div class="timeline-labels">
+                <div>Аналитика</div>
+                <div>Разработка интерфейса</div>
+                <div>Завершение работ</div>
+            </div>
+            <div class="timeline-bar">
+                <div class="timeline-step step1"></div>
+                <div class="timeline-step step2"></div>
+                <div class="timeline-step step3"></div>
+            </div>
+            <div class="timeline-content">
+                <div>
+                    <div>Знакомство с проектом,<br>изучение документации<br>в Coda, Jira и GitLab,<br>погружение в архитектуру</div>
+                    <div class="timeline-date">Февраль</div>
+                </div>
+                <div>
+                    <div>Разработка отдельных<br>страниц интерфейса,<br>реализация логики авторизации,<br>модальных окон</div>
+                    <div class="timeline-date">Март</div>
+                </div>
+                <div>
+                    <div>Завершение всех<br>поставленных задач,<br>финальная проверка<br>и согласование</div>
+                    <div class="timeline-date">Апрель–Май</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; ©Проект BMW "Базы-данных".</p>
+    </footer>
+</body>
+</html> 

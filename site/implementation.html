@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Эмпатичный чат-бот | Реализация технологии</title>
+    <link rel="stylesheet" href="/site/styles/styles.css">
+</head>
+<body>
+    <header>
+        <div class="width-container flex header_main">
+            <div class="logo-container">
+                <a class="flex" href="https://www.bmw.com" target="_blank">
+                    <img src="assets/bmw-logo.svg" alt="">
+                </a>
+                <a class="flex" href="https://mospolytech.ru" target="_blank">
+                    <img src="assets/mospolytech-logo.svg" alt="">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="about.html">О проекте</a></li>
+                    <li><a href="implementation.html" class="active">Реализация технологии</a></li>
+                    <li><a href="resources.html">Ресурсы</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="implementation-section">
+            <h1>Реализация эмпатичного чат-бота</h1>
+            <div class="content">
+                <h2>Техническая реализация</h2>
+                <p>Проект представляет собой телеграм-бота, созданного для эмоциональной поддержки пользователей. Бот использует технологию YandexGPT для анализа входящих сообщений и генерации эмпатичных ответов. Разработка велась на Python с использованием библиотеки aiogram для работы с Telegram API.</p>
+                
+                <h2>Демонстрация работы бота</h2>
+                <div class="demo-gallery">
+                    <div class="demo-item">
+                        <div class="demo-item-img">
+                            <img src="assets/demo1.png" alt="Пример диалога с ботом - часть 1">
+                        </div>
+                        <p>Пользователь делится своими переживаниями</p>
+                    </div>
+                    <div class="demo-item">
+                        <div class="demo-item-img">
+                            <img src="assets/demo2.png" alt="Пример диалога с ботом - часть 2">
+                        </div>
+                        <p>Бот отвечает с пониманием и поддержкой</p>
+                    </div>
+                </div>
+                
+                <h2>Архитектура решения</h2>
+                <pre style="background:#23272e; color:#e6e6e6; padding:16px; border-radius:8px; overflow-x:auto; font-size:15px;">
+<span style="color:#ff7b72;">import</span> <span style="color:#79c0ff;">logging</span>
+<span style="color:#ff7b72;">import</span> <span style="color:#79c0ff;">os</span>
+<span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">aiogram</span> <span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">Bot</span>, <span style="color:#d2a8ff;">Dispatcher</span>, <span style="color:#d2a8ff;">types</span>
+<span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">aiogram.types</span> <span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">Message</span>
+<span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">aiogram.utils</span> <span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">executor</span>
+<span style="color:#ff7b72;">from</span> <span style="color:#a5d6ff;">dotenv</span> <span style="color:#ff7b72;">import</span> <span style="color:#d2a8ff;">load_dotenv</span>
+<span style="color:#ff7b72;">import</span> <span style="color:#79c0ff;">requests</span>
+
+<span style="color:#79c0ff;">load_dotenv</span>()
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">bot</span> <span style="color:#e6e6e6;">=</span> <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">Bot</span>(<span style="color:#79c0ff;">token</span>=<span style="color:#79c0ff;">os</span>.getenv(<span style="color:#a5d6ff;">"BOT_TOKEN"</span>))
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">dp</span> <span style="color:#e6e6e6;">=</span> <span style="color:#d2a8ff;">new</span> <span style="color:#ffa657;">Dispatcher</span>(<span style="color:#79c0ff;">bot</span>)
+
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">YC_API_KEY</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">os</span>.getenv(<span style="color:#a5d6ff;">"YC_API_KEY"</span>)
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">YC_FOLDER_ID</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">os</span>.getenv(<span style="color:#a5d6ff;">"YC_FOLDER_ID"</span>)
+<span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">MODEL_NAME</span> <span style="color:#e6e6e6;">=</span> <span style="color:#a5d6ff;">"yandexgpt-lite"</span>
+
+
+<span style="color:#ff7b72;">async</span> <span style="color:#ff7b72;">def</span> <span style="color:#79c0ff;">reflect_message</span>(<span style="color:#79c0ff;">user_text</span>: <span style="color:#79c0ff;">str</span>) <span style="color:#e6e6e6;">-&gt;</span> <span style="color:#79c0ff;">str</span>:
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">prompt</span> <span style="color:#e6e6e6;">=</span> &#123;
+        <span style="color:#79c0ff;">modelUri</span>: <span style="color:#a5d6ff;">f"gpt://&#123;YC_FOLDER_ID&#125;/&#123;MODEL_NAME&#125;"</span>,
+        <span style="color:#79c0ff;">completionOptions</span>: &#123;
+            <span style="color:#79c0ff;">stream</span>: <span style="color:#7ee787;">false</span>,
+            <span style="color:#79c0ff;">temperature</span>: <span style="color:#79c0ff;">0.7</span>,
+            <span style="color:#79c0ff;">maxTokens</span>: <span style="color:#7ee787;">300</span>
+        &#125;,
+        <span style="color:#79c0ff;">messages</span>: [
+            &#123;
+                <span style="color:#79c0ff;">role</span>: <span style="color:#a5d6ff;">"system"</span>,
+                <span style="color:#79c0ff;">text</span>: <span style="color:#a5d6ff;">"Ты эмпатичный собеседник, который перефразирует мысли с теплотой. "</span>
+                        <span style="color:#a5d6ff;">"Отвечай кратко и с пониманием."</span>
+            &#125;,
+            &#123;
+                <span style="color:#79c0ff;">role</span>: <span style="color:#a5d6ff;">"user"</span>,
+                <span style="color:#79c0ff;">text</span>: <span style="color:#79c0ff;">user_text</span>
+            &#125;
+        ]
+    &#125;
+
+    <span style="color:#ff7b72;">try</span>:
+        <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">response</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">requests</span>.post(
+            <span style="color:#a5d6ff;">"https://llm.api.cloud.yandex.net/foundationModels/v1/completion"</span>,
+            <span style="color:#79c0ff;">headers</span>=&#123;
+                <span style="color:#79c0ff;">"Authorization"</span>: <span style="color:#a5d6ff;">f"Api-Key &#123;YC_API_KEY&#125;"</span>,
+                <span style="color:#79c0ff;">"x-folder-id"</span>: <span style="color:#79c0ff;">YC_FOLDER_ID</span>,
+                <span style="color:#79c0ff;">"Content-Type"</span>: <span style="color:#a5d6ff;">"application/json"</span>
+            &#125;,
+            <span style="color:#79c0ff;">json</span>=<span style="color:#79c0ff;">prompt</span>,
+            <span style="color:#79c0ff;">timeout</span>=<span style="color:#7ee787;">10</span>
+        )
+
+        <span style="color:#79c0ff;">print</span>(<span style="color:#a5d6ff;">f"Status Code: &#123;response.status_code&#125;"</span>)
+        <span style="color:#79c0ff;">print</span>(<span style="color:#a5d6ff;">f"Response: &#123;response.text&#125;"</span>)
+
+        <span style="color:#ff7b72;">if</span> <span style="color:#79c0ff;">response</span>.status_code != <span style="color:#7ee787;">200</span>:
+            <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">error_msg</span> <span style="color:#e6e6e6;">=</span> <span style="color:#a5d6ff;">f"Ошибка API (код &#123;response.status_code&#125;)"</span>
+            <span style="color:#ff7b72;">if</span> <span style="color:#79c0ff;">response</span>.text:
+                <span style="color:#79c0ff;">error_msg</span> += <span style="color:#a5d6ff;">f": &#123;response.text&#125;"</span>
+            <span style="color:#ff7b72;">return</span> <span style="color:#79c0ff;">error_msg</span>
+
+        <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">result</span> <span style="color:#e6e6e6;">=</span> <span style="color:#79c0ff;">response</span>.json()
+        <span style="color:#ff7b72;">return</span> <span style="color:#79c0ff;">result</span>[<span style="color:#a5d6ff;">"result"</span>][<span style="color:#a5d6ff;">"alternatives"</span>][<span style="color:#7ee787;">0</span>][<span style="color:#a5d6ff;">"message"</span>][<span style="color:#a5d6ff;">"text"</span>]
+
+    <span style="color:#ff7b72;">except</span> <span style="color:#79c0ff;">requests</span>.exceptions.RequestException <span style="color:#ff7b72;">as</span> <span style="color:#79c0ff;">e</span>:
+        <span style="color:#79c0ff;">logging</span>.error(<span style="color:#a5d6ff;">f"Ошибка подключения: &#123;str(e)&#125;"</span>)
+        <span style="color:#ff7b72;">return</span> <span style="color:#a5d6ff;">"Извини, проблемы с соединением. Попробуй позже⏲️"</span>
+    <span style="color:#ff7b72;">except</span> <span style="color:#79c0ff;">Exception</span> <span style="color:#ff7b72;">as</span> <span style="color:#79c0ff;">e</span>:
+        <span style="color:#79c0ff;">logging</span>.error(<span style="color:#a5d6ff;">f"YaLM error: &#123;str(e)&#125;"</span>)
+        <span style="color:#ff7b72;">return</span> <span style="color:#a5d6ff;">"Извини, не могу сейчас ответить. Попробуй позже⏲️"</span>
+
+
+<span style="color:#79c0ff;">@dp</span>.message_handler(commands=[<span style="color:#a5d6ff;">"start"</span>])
+<span style="color:#ff7b72;">async</span> <span style="color:#ff7b72;">def</span> <span style="color:#79c0ff;">start</span>(<span style="color:#79c0ff;">msg</span>: <span style="color:#79c0ff;">Message</span>):
+    <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">msg</span>.reply(<span style="color:#a5d6ff;">"Привет. Я здесь, чтобы выслушать. Что тревожит?"</span>)
+
+
+<span style="color:#79c0ff;">@dp</span>.message_handler()
+<span style="color:#ff7b72;">async</span> <span style="color:#ff7b72;">def</span> <span style="color:#79c0ff;">handle_text</span>(<span style="color:#79c0ff;">msg</span>: <span style="color:#79c0ff;">Message</span>):
+    <span style="color:#ff7b72;">const</span> <span style="color:#79c0ff;">reply</span> <span style="color:#e6e6e6;">=</span> <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">reflect_message</span>(<span style="color:#79c0ff;">msg</span>.text)
+    <span style="color:#ff7b72;">await</span> <span style="color:#79c0ff;">msg</span>.reply(<span style="color:#79c0ff;">reply</span>)
+
+
+<span style="color:#ff7b72;">if</span> <span style="color:#79c0ff;">__name__</span> == <span style="color:#a5d6ff;">"__main__"</span>:
+    <span style="color:#79c0ff;">executor</span>.start_polling(<span style="color:#79c0ff;">dp</span>)
+                </pre>
+        
+                <h2>Используемые технологии</h2>
+                <ul>
+                    <li>Python 3.9+ (основной язык разработки)</li>
+                    <li>Aiogram (библиотека для работы с Telegram API)</li>
+                    <li>YandexGPT (языковая модель для генерации ответов)</li>
+                    <li>Docker (контейнеризация приложения)</li>
+                    <li>Yandex Cloud (размещение API языковой модели)</li>
+                    <li>Git (контроль версий)</li>
+                </ul>
+        
+                <h2>Как работает бот</h2>
+                <p>Пользователь начинает диалог с ботом через Telegram, отправляя сообщение с командой /start или просто текстом. Бот анализирует входящее сообщение с помощью YandexGPT, который был специально настроен на эмпатичные и поддерживающие ответы. Полученный ответ отправляется обратно пользователю, создавая ощущение понимания и поддержки.</p>
+                
+                <h2>Особенности реализации</h2>
+                <ul>
+                    <li>Тонкая настройка параметров языковой модели (temperature=0.7 для баланса креативности и релевантности)</li>
+                    <li>Обработка ошибок подключения к API с дружелюбными сообщениями для пользователя</li>
+                    <li>Ограничение длины ответов (maxTokens=300) для удобства чтения</li>
+                    <li>Системный промпт, задающий эмпатичный тон всем ответам</li>
+                </ul>
+            </div>
+        </section> 
+    </main>
+
+    <footer>
+        <p>&copy; Проект BMW "Базы-данных".</p>
+    </footer>
+</body>
+</html>
